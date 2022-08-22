@@ -1,100 +1,24 @@
-<html>
-  <head>
-    <title>Pandas in the Browser</title>
-    <meta charset="utf-8">
-    <link rel="icon" type="image/x-icon" href="./favicon.png">
-    <!-- Load WS Style -->
-    <link rel="stylesheet" href="./w3.css" />
-    <!-- Load Panel Tools for the GUI -->
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega@5"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
-    <script type="text/javascript" src="https://unpkg.com/tabulator-tables@4.9.3/dist/js/tabulator.js"></script>
-    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-2.4.2.js"></script>
-    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-widgets-2.4.2.min.js"></script>
-    <script type="text/javascript" src="https://cdn.bokeh.org/bokeh/release/bokeh-tables-2.4.2.min.js"></script>
-    <script type="text/javascript" src="https://unpkg.com/@holoviz/panel@0.13.0/dist/panel.min.js"></script>
-    <script type="text/javascript">
-      Bokeh.set_log_level("info");
-    </script>
-    <!-- Load Pyscript Tools -->
-    <link rel="stylesheet" href="https://pyscript.net/alpha/pyscript.css" />
-    <script defer src="https://pyscript.net/alpha/pyscript.js"></script>
-    <py-env>
-      - matplotlib
-      - pandas
-      - panel==0.13.1a2
-    </py-env>
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <title>CSV Wrangler</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" src="files/helmet.png">
+  <link rel="stylesheet" src="files/w3.css">
+  <script src="files/html-table-to-csv.js"></script>
+  <script src="files/csv-to-html-table-1.js"></script>
+
 </head>
-
 <body>
-    <h1>Upload csv</h1>
 
-        
-          
-                <div id="fileinput"></div>
-                <div id="upload"></div>
-                <div id="table"></div>
+  <input type="file" id="csvFileInput" style="padding-bottom: 15px">
+  <div class="w3-container">
+    <table class="w3-table w3-striped w3-border" id="csvRoot">
+      <script  src="files/csv-to-html-table-2.js"></script>
+    </table>
+  </div>
+  
+  <button type="button" onclick="tableToCSV()">download CSV</button>
 
-    <h1>Upload XLSX</h1>           
-                <div id="fileinput2"></div>
-                <div id="upload2"></div>
-                <div id="table2"></div>
-
-    <p id="excel_data"></p>
-            
-    <py-script>
-import numpy as np
-import pandas as pd
-import asyncio
-import panel as pn
-from panel.io.pyodide import show
-
-
-
-
-
-
-fileInput = pn.widgets.FileInput(accept='.csv')
-uploadButton = pn.widgets.Button(name='Upload', button_type = 'primary')
-
-table = pn.widgets.Tabulator(pagination='remote', page_size=50)
-
-document.getElementById('table').style.display = 'none'
-
-def process_file(event):
-    if fileInput.value is not None:
-        table.value = pd.read_csv(io.BytesIO(fileInput.value))
-        document.getElementById('table').style.display = 'block'
-
-uploadButton.on_click(process_file)
-
-await show(fileInput, 'fileinput')
-await show(uploadButton, 'upload')
-await show(table, 'table')
-
-
-
-
-
-
-fileInput2 = pn.widgets.FileInput(accept='.xlsx')
-uploadButton2 = pn.widgets.Button(name='Upload Excel', button_type = 'primary')
-
-def process_file2(event):
-    if fileInput2.value is not None:
-        df = pd.read_excel(fileInput2)
-        excel_data = Element('excel_data')
-        excel_data.write(df.head())
-        print(df.head())
-
-uploadButton.on_click(process_file2)
-
-await show(fileInput2, 'fileinput2')
-await show(uploadButton2, 'upload2')
-
-print(df.head())
-
-    </py-script>
 </body>
 </html>
