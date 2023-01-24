@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+<title>Excel to HTML Table</title>
+<link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+<script defer src="https://pyscript.net/latest/pyscript.js"></script>
+</head>
+<body>
+
+<h2>Excel to HTML Table</h2>
+
+<form>
+  <textarea id="excel-data" rows="10" cols="50"></textarea>
+  <br><br>
+  <button type="button" onclick="generateTable()">Generate Table</button>
+</form>
+
+<br><br>
+
+<table id="html-table" style="display: none;"></table>
+
+<script type="text/python">
+  import pandas as pd
+  import io
+  
+  def generateTable():
+    data = document.getElementById("excel-data").value
+    df = pd.read_csv(io.StringIO(data), sep='\t', header=None)
+    df = df.applymap(lambda x: x*2 if isinstance(x, (int, float)) else x)
+    table = document.getElementById("html-table")
+    table.innerHTML = df.to_html(index=False, header=False)
+    table.style.display = "block"
+</script>
+
+</body>
+</html>

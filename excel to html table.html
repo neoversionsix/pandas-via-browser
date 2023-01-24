@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Excel to HTML Table</title>
+</head>
+<body>
+
+<h2>Excel to HTML Table</h2>
+
+<form>
+  <textarea id="excel-data" rows="10" cols="50"></textarea>
+  <br><br>
+  <button type="button" onclick="generateTable()">Generate Table</button>
+</form>
+
+<br><br>
+
+<table id="html-table" style="display: none; border: 1px solid black;"></table>
+
+<script>
+  function generateTable() {
+    var data = document.getElementById("excel-data").value;
+    var rows = data.split("\n");
+    var table = document.getElementById("html-table");
+
+    for (var i = 0; i < rows.length; i++) {
+      var cells = rows[i].split("\t");
+      var row = table.insertRow(-1);
+
+      for (var j = 0; j < cells.length; j++) {
+        var cell = row.insertCell(-1);
+        cell.innerHTML = cells[j];
+        cell.style.border = "1px solid black";
+      }
+    }
+
+    table.style.display = "block";
+  }
+</script>
+
+</body>
+</html>
