@@ -38,6 +38,9 @@ def generateTable():
   table = document.getElementById("html-table")
   table.innerHTML = df.to_html(index=False, header=False)
   table.style.display = "block"
+
+table = document.getElementById("html-table")
+table.innerHTML = df.to_html(index=False)
 </py-script>
 
 </body>

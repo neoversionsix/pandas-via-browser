@@ -27,10 +27,10 @@
 		<div id="pandas-source">
 			<h3>Data Source</h3>
 			<textarea id="txt-url" rows="10" cols="50"></textarea>
-			<button type="submit" id="btn-load" class="py-button" py-click="loadFromURL()">Load CSV</button>
+			<button type="submit" id="btn-load" class="py-button" py-click="loadFromURL()">Load Pasted Data</button>
 		</div>
 
-		<div id="pandas-repl" hidden>
+		<!-- <div id="pandas-repl" hidden>
 			<h3>Python REPL</h3>
 			<py-repl id ="pandas-repl-inner" output="pandas-output-inner">
 				# Hit SHIFT + ENTER to execute example code
@@ -38,7 +38,7 @@
 				# Get all closed airports in Great Britain
 				df2 = df.query("type == 'closed' & iso_country == 'GB'")
 				df2
-			</py-repl>
+			</py-repl> -->
 
 		</div>
 
@@ -47,10 +47,10 @@
 			<div id="pandas-output-inner"></div>
 		</div>
 
-		<div id="pandas-dev-console" hidden>
+		<!-- <div id="pandas-dev-console" hidden>
 			<h3>Dev Console</h3>
 			<py-terminal auto></py-terminal>
-		</div>
+		</div> -->
 
 		
 
@@ -62,20 +62,20 @@
 			<section class="pyscript">
 				<py-script>
 					import pandas as pd
-					from pyodide.http import open_url
+					#from pyodide.http import open_url
 					import sys
 					import io
 
 					title = "Pandas (and basic DOM manipulation)"
-					page_message = "This example loads a remote CSV file into a Pandas dataframe, displays it and lets you manipulate it through a Python REPL"
+					page_message = "Loads pasted excel data into a table"
 
-					url = "https://raw.githubusercontent.com/datasets/airport-codes/master/data/airport-codes.csv"
+					#url = "https://raw.githubusercontent.com/datasets/airport-codes/master/data/airport-codes.csv"
 
 					Element("header-title").element.innerText = title
 					Element("page-title").element.innerText = title
 					Element("page-message").element.innerText = page_message
 
-					Element("txt-url").element.value = url
+					Element("txt-url").element.value = "paste data here"
 
 					# Depending on the type of DOM element, there are several alternative methods to write to it
 					# Element("id-of-dom-element").write("example")
@@ -97,7 +97,7 @@
 						Element("pandas-output-inner").element.innerHTML = ""
 
 						url = Element("txt-url").element.value
-						log ("Trying to fetch CSV from " + url)
+						#log ("Trying to fetch CSV from " + url)
 						
 						#Read csv option
 						#df = pd.read_csv(open_url(url))
@@ -113,20 +113,22 @@
 
 						# Pasted Excel option
 						data = js.document.getElementById("txt-url").value
-						df = pd.read_csv(io.StringIO(data), sep='\t', header=None)
+						df = pd.read_csv(io.StringIO(data), sep='\t', header=0)
 
-						Element("pandas-repl").element.style.display = "block"
+						#Element("pandas-repl").element.style.display = "block"
 						Element("pandas-output").element.style.display = "block"
-						Element("pandas-dev-console").element.style.display = "block"
+						#Element("pandas-dev-console").element.style.display = "block"
 
 						display (df, target="pandas-output-inner", append="False")
-
+					
+					'''
 					def log(message):
 						# log to pyscript dev console
 						print (message)
 
 						# log to JS console
 						js.console.log (message)
+					'''
 				</py-script>
 			</section>
 		</py-tutor>
