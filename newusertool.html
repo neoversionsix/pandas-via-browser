@@ -6,6 +6,11 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1" />
 		<link rel="icon" type="image/png" href="./favicon.png" />
 		<link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+        <script type="text/javascript">
+		    function focusOnElement() {
+			    document.getElementById("activate-code").focus();
+		}
+        </script>
 		<script defer src="https://pyscript.net/latest/pyscript.js"></script>
 
 		<link rel="stylesheet" href="./assets/css/examples.css" />
@@ -42,7 +47,11 @@
 
         <div id ="activate-code" hidden>
 			<h3>Activate Code</h3>
-			<div id="activate-code-inner"></div>
+            <table>
+                <tr>
+                  <td style="border: 1px solid black;"><pre id="activate-code-inner"></pre></td>
+                </tr>
+              </table>
 		</div>
 	
 
@@ -54,6 +63,7 @@
 			<section class="pyscript">
 				<py-script>
                     import pandas as pd
+                    from js import document
                     import sys
                     import io
                     title = "Transforming Excel Data with Python in the Browser"
@@ -94,10 +104,14 @@
                         Element("pandas-output").element.style.display = "block"
                         display (df, target="pandas-output-inner", append="False")
                     
-                        for a_row in ccl_code:
-                            # REPLACE SWAPME123 with the username in each row of the code slab
-                            new_row = a_row.replace('SWAPME123', 'to_switch')
-                            final_activate_code_string = final_activate_code_string + new_row + '\n'
+                        for index, row in df.iterrows():
+                            # Column that has the usernames to put in the code
+                            to_switch = row['USERNAME'].upper()
+                            #Write to file
+                            for a_row in ccl_code:
+                                # REPLACE SWAPME123 with the username in each row of the code slab
+                                new_row = a_row.replace('SWAPME123', to_switch)
+                                final_activate_code_string = final_activate_code_string + new_row + '\n'
                     
                     def createAuthenticate(*ags, **kws):
                         Element("activate-code").element.style.display = "block"
