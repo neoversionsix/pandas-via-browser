@@ -12,10 +12,10 @@
 	</head>
 
 	<body>
-		<nav class="navbar" style="background-color: #000000;">
+		<nav class="navbar" style="background-color: #1879ba;">
 			<div class="app-header">
 				<a href="/">
-					<img src="./logo.png" class="logo">
+					<img src="./logo.png" class="logo" width="100" height="100">
 				</a>
 				<a class="title" id="page-title" href="" style="color: #f0ab3c;"></a>
 			</div>
@@ -25,8 +25,9 @@
 		<div id="page-message"></div>
 
 		<div id="pandas-source">
-			<h3>Data Source</h3>
+			<h3>Paste Data From Excel Below</h3>
 			<textarea id="txt-url" rows="10" cols="50"></textarea>
+			<br>
 			<button type="submit" id="btn-load" class="py-button" py-click="loadFromURL()">Load Pasted Data</button>
 		</div>
 
@@ -66,7 +67,7 @@
 					import sys
 					import io
 
-					title = "Pandas (and basic DOM manipulation)"
+					title = "Transforming Excel Data with Python in the Browser"
 					page_message = "Loads pasted excel data into a table"
 
 					#url = "https://raw.githubusercontent.com/datasets/airport-codes/master/data/airport-codes.csv"
@@ -75,7 +76,7 @@
 					Element("page-title").element.innerText = title
 					Element("page-message").element.innerText = page_message
 
-					Element("txt-url").element.value = "paste data here"
+					Element("txt-url").element.value = ""
 
 					# Depending on the type of DOM element, there are several alternative methods to write to it
 					# Element("id-of-dom-element").write("example")
@@ -114,6 +115,13 @@
 						# Pasted Excel option
 						data = js.document.getElementById("txt-url").value
 						df = pd.read_csv(io.StringIO(data), sep='\t', header=0)
+						
+						#----------CONCAT A STRING
+						# Define the string to concatenate
+						string_to_concatenate = ".00"
+						# Concatenate the string to all elements in the dataframe
+						df = df.applymap(lambda x: str(x) + string_to_concatenate)
+						#-----------------------
 
 						#Element("pandas-repl").element.style.display = "block"
 						Element("pandas-output").element.style.display = "block"
