@@ -21,6 +21,8 @@ ccl_code = [
 ''
 ]
 
+final_activate_code_string = str('')
+
 df = pd.DataFrame()
 def loadFromPasted(*ags, **kws):
 	global df
@@ -31,11 +33,10 @@ def loadFromPasted(*ags, **kws):
 	# Pasted Excel option
 	data = js.document.getElementById("txt-url").value
 	df = pd.read_csv(io.StringIO(data), sep='\t', header=0)
-	
-	#Element("pandas-repl").element.style.display = "block"
+	#Display
 	Element("pandas-output").element.style.display = "block"
-	#Element("pandas-dev-console").element.style.display = "block"
 	display (df, target="pandas-output-inner", append="False")
 
 def createAuthenticate(*ags, **kws):
-    x = 'hello'
+	Element("activate-code").element.style.display = "block"
+	display (df, target="activate-code-inner", append="False")
