@@ -25,18 +25,25 @@ final_activate_code_string = str('')
 
 df = pd.DataFrame()
 def loadFromPasted(*ags, **kws):
-	global df
-	# clear dataframe & output
-	df = pd.DataFrame()
-	Element("pandas-output-inner").element.innerHTML = ""
-	
-	# Pasted Excel option
-	data = js.document.getElementById("txt-url").value
-	df = pd.read_csv(io.StringIO(data), sep='\t', header=0)
-	#Display
-	Element("pandas-output").element.style.display = "block"
-	display (df, target="pandas-output-inner", append="False")
+    global df
+    global final_activate_code_string
+    # clear dataframe & output
+    df = pd.DataFrame()
+    final_activate_code_string = str('')
+    Element("pandas-output-inner").element.innerHTML = ""
+    
+    # Pasted Excel option
+    data = js.document.getElementById("txt-url").value
+    df = pd.read_csv(io.StringIO(data), sep='\t', header=0)
+    #Display
+    Element("pandas-output").element.style.display = "block"
+    display (df, target="pandas-output-inner", append="False")
+
+    for a_row in ccl_code:
+        # REPLACE SWAPME123 with the username in each row of the code slab
+        new_row = a_row.replace('SWAPME123', 'to_switch')
+        final_activate_code_string = final_activate_code_string + new_row + '\n'
 
 def createAuthenticate(*ags, **kws):
-	Element("activate-code").element.style.display = "block"
-	display (df, target="activate-code-inner", append="False")
+    Element("activate-code").element.style.display = "block"
+    display (final_activate_code_string, target="activate-code-inner", append="False")
