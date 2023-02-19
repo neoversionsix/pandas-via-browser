@@ -51,3 +51,4 @@ def loadFromPasted(*ags, **kws):
 def createAuthenticate(*ags, **kws):
     Element("activate-code").element.style.display = "block"
     display (final_activate_code_string, target="activate-code-inner", append="False")
+    activate_code.focus();
