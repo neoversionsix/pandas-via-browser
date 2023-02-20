@@ -1,11 +1,13 @@
 import pandas as pd
 from js import document
-import sys
-import io
+#import sys
+#import io
+#from io import StringIO
 import datetime
+
 title = "Transforming Excel Data with Python in the Browser"
 page_message = "Loads pasted excel data into a table"
-#url = "https://raw.githubusercontent.com/datasets/airport-codes/master/data/airport-codes.csv"
+
 Element("header-title").element.innerText = title
 Element("page-title").element.innerText = title
 Element("page-message").element.innerText = page_message
@@ -23,7 +25,9 @@ ccl_code = [
 ''
 ]
 # Content Manager Variables
-content_manager_template_json = '{"External Id":{},"External Id Alias Pool":{},"Username":{},"*Last Name":{},"*First Name":{},"Middle Name":{},"Name Full Formatted":{},"Title":{},"Suffix":{},"Position":{},"Begin Date+Time":{},"*End Date+Time":{},"Physician Ind":{},"SSN":{},"SSN Pool":{},"Birthdate":{},"Sex":{},"VIP":{},"Active Ind":{},"Primary Assigned Location":{},"Email":{},"*Prsnl Alias Type":{},"*Prsnl Alias":{},"*Prsnl Alias Pool":{},"Prsnl Alias Active Ind":{},"Prsnl_Alias_End_Dt":{},"*Org Name":{},"Org Confid Level":{},"Org_End_Dt":{},"*Address Type":{},"*Address Type Seq":{},"Address Street 1":{},"Address Street 2":{},"Address Street 3":{},"Address Street 4":{},"City":{},"County":{},"State or Prov":{},"Country":{},"Zip Code":{},"Contact":{},"Comment":{},"District Health UK":{},"Primary Care UK":{},"Address_Delete_Ind":{},"Org Address Reltn Ind":{},"Org Addr Name":{},"Org Addr Type":{},"Org Addr Sequence":{},"*Phone Type":{},"*Phone Type Seq":{},"Phone Number":{},"Phone Extension":{},"Phone Format":{},"Phone Description":{},"Phone Contact":{},"Phone Call Instruction":{},"Phone_Delete_Ind":{},"Org Phone Reln Ind":{},"Org Phone Name":{},"Org Phone Type":{},"Org Phone Seq":{},"*Location Type":{},"*Location Name":{},"Location_Delete_Ind":{},"*Org Group Type":{},"*Org Group Name":{},"Org_Group_Delete_Ind":{},"*Prsnl Group Type":{},"*Prsnl Group Name":{},"*Prsnl Group Class":{},"Prsnl_Group_Delete_Ind":{},"*Clinical Service Display":{},"Clinical Service Default":{},"Clinical Service Org Name":{},"Clin_Serv_Delete_Ind":{}}'
+#content_manager_template_json = '{"External Id":{},"External Id Alias Pool":{},"Username":{},"*Last Name":{},"*First Name":{},"Middle Name":{},"Name Full Formatted":{},"Title":{},"Suffix":{},"Position":{},"Begin Date+Time":{},"*End Date+Time":{},"Physician Ind":{},"SSN":{},"SSN Pool":{},"Birthdate":{},"Sex":{},"VIP":{},"Active Ind":{},"Primary Assigned Location":{},"Email":{},"*Prsnl Alias Type":{},"*Prsnl Alias":{},"*Prsnl Alias Pool":{},"Prsnl Alias Active Ind":{},"Prsnl_Alias_End_Dt":{},"*Org Name":{},"Org Confid Level":{},"Org_End_Dt":{},"*Address Type":{},"*Address Type Seq":{},"Address Street 1":{},"Address Street 2":{},"Address Street 3":{},"Address Street 4":{},"City":{},"County":{},"State or Prov":{},"Country":{},"Zip Code":{},"Contact":{},"Comment":{},"District Health UK":{},"Primary Care UK":{},"Address_Delete_Ind":{},"Org Address Reltn Ind":{},"Org Addr Name":{},"Org Addr Type":{},"Org Addr Sequence":{},"*Phone Type":{},"*Phone Type Seq":{},"Phone Number":{},"Phone Extension":{},"Phone Format":{},"Phone Description":{},"Phone Contact":{},"Phone Call Instruction":{},"Phone_Delete_Ind":{},"Org Phone Reln Ind":{},"Org Phone Name":{},"Org Phone Type":{},"Org Phone Seq":{},"*Location Type":{},"*Location Name":{},"Location_Delete_Ind":{},"*Org Group Type":{},"*Org Group Name":{},"Org_Group_Delete_Ind":{},"*Prsnl Group Type":{},"*Prsnl Group Name":{},"*Prsnl Group Class":{},"Prsnl_Group_Delete_Ind":{},"*Clinical Service Display":{},"Clinical Service Default":{},"Clinical Service Org Name":{},"Clin_Serv_Delete_Ind":{}}'
+header_row = ['*Last Name', '*First Name', 'Middle Name', 'Username', 'External Id', 'External Id Alias Pool', 'Name Full Formatted', 'Title', 'Suffix', 'Position', 'Begin Date+Time', '*End Date+Time', 'Physician Ind', 'SSN', 'SSN Pool', 'Birthdate', 'Sex', 'VIP', 'Active Ind', 'Primary Assigned Location', 'Email', '*Prsnl Alias Type', '*Prsnl Alias', '*Prsnl Alias Pool', 'Prsnl Alias Active Ind', 'Prsnl_Alias_End_Dt', '*Org Name', 'Org Confid Level', 'Org_End_Dt', '*Address Type', '*Address Type Seq', 'Address Street 1', 'Address Street 2', 'Address Street 3', 'Address Street 4', 'City', 'County', 'State or Prov', 'Country', 'Zip Code', 'Contact', 'Comment', 'District Health UK', 'Primary Care UK', 'Address_Delete_Ind', 'Org Address Reltn Ind', 'Org Addr Name', 'Org Addr Type', 'Org Addr Sequence', '*Phone Type', '*Phone Type Seq', 'Phone Number', 'Phone Extension', 'Phone Format', 'Phone Description', 'Phone Contact', 'Phone Call Instruction', 'Phone_Delete_Ind', 'Org Phone Reln Ind', 'Org Phone Name', 'Org Phone Type', 'Org Phone Seq', '*Location Type', '*Location Name', 'Location_Delete_Ind', '*Org Group Type', '*Org Group Name', 'Org_Group_Delete_Ind', '*Prsnl Group Type', '*Prsnl Group Name', '*Prsnl Group Class', 'Prsnl_Group_Delete_Ind', '*Clinical Service Display', 'Clinical Service Default', 'Clinical Service Org Name', 'Clin_Serv_Delete_Ind']
+
 end_date = r"30/12/2100"
 alias_pool = 'External ID'
 today = datetime.date.today()
@@ -35,7 +39,8 @@ org_g_type = 'SECURITY'
 org_g_name = 'Western Health'
 
 # Create Content manager Template
-df_cm = pd.read_json(content_manager_template_json, orient='index', header=[1])
+#df_cm = pd.read_json(content_manager_template_json, orient='index')
+df_cm = pd.DataFrame(columns=header_row)
 
 final_activate_code_string = str('')
 
@@ -105,4 +110,4 @@ def createAuthenticate(*ags, **kws):
 
 def createContentManagerFile(*ags, **kws):
     Element("content-manager").element.style.display = "block"
-    display (final_activate_code_string, target="content-manager-inner", append="False")
+    display (df_cm, target="content-manager-inner", append="False")
