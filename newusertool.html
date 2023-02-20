@@ -53,7 +53,9 @@
 		<nav class="navbar" style="background-color: #1879ba;">
 			<div class="app-header">
 				<a href="/">
-					<img src="./logo.png" class="logo" width="100" height="100">
+                    <svg width="100" height="100">
+                    <path d="M50 5a45 45 0 1 1 0.1 0z m0-10a55 55 0 1 0 0.1 0z m25 53l-8-22.7 19.2-13.9-23.8-0.7-9.4-22.1-9.4 22.1-23.8 0.7 19.2 13.9-8 22.7 17.1-11.5z" fill="#000" />
+                    </svg>
 				</a>
 				<a class="title" id="page-title" href="" style="color: #f0ab3c;"></a>
 			</div>
@@ -125,7 +127,7 @@
                     import numpy as np
                     import io
                     
-                    title = "Transforming Excel Data with Python in the Browser"
+                    title = "Bulk Upload tool"
                     page_message = "Loads pasted excel data into a table"
                     
                     Element("header-title").element.innerText = title
@@ -147,7 +149,7 @@
 
                     # CCL Code
                     ccl_cred_code = [
-                    '; CREDENTIAL MOVE SCRIPT'
+                    '; CREDENTIAL MOVE SCRIPT ------------------------------------------'
                     , 'update into credential cred'
                     , 'set cred.prsnl_id = (select person_id from prsnl where username = "SWAPME123")'
                     , ', cred.credential_cd = (select code_value from code_value where code_set = 29600 and display = "SWAP_TO_REAL_CREDENTIAL")'
@@ -180,6 +182,7 @@
                     , ',eau.updt_id = reqinfo->updt_id'
                     , ',eau.updt_cnt = eau.updt_cnt + 1'
                     , 'where eau.username = "SWAPME123"'
+                    , ';---------------------------------------------------------------------'
                     ]
 
                     # Content Manager Variables
