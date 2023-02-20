@@ -1,9 +1,8 @@
 import pandas as pd
 from js import document
-#import sys
-#import io
-#from io import StringIO
 import datetime
+import numpy as np
+import io
 
 title = "Transforming Excel Data with Python in the Browser"
 page_message = "Loads pasted excel data into a table"
@@ -103,6 +102,7 @@ def loadFromPasted(*ags, **kws):
         df_cm.loc[row_number,'*Org Group Type'] = org_g_type
         df_cm.loc[row_number,'*Org Group Name'] = org_g_name
         row_number+=1
+    
 
 def createAuthenticate(*ags, **kws):
     Element("activate-code").element.style.display = "block"
@@ -110,4 +110,7 @@ def createAuthenticate(*ags, **kws):
 
 def createContentManagerFile(*ags, **kws):
     Element("content-manager").element.style.display = "block"
-    display (df_cm, target="content-manager-inner", append="False")
+    #display (df_cm, target="content-manager-inner", append="False")
+    html_table = df_cm.to_html(index=False)
+    display(html_table, target="content-manager-inner", append=False)
+    document.getElementById("content-manager-inner").innerHTML = html_table;
