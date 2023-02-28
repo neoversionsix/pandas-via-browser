@@ -114,3 +114,4 @@ def createContentManagerFile(*ags, **kws):
     html_table = df_cm.to_html(index=False)
     display(html_table, target="content-manager-inner", append=False)
     document.getElementById("content-manager-inner").innerHTML = html_table;
+#end
