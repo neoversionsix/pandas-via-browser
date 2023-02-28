@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title id="header-title"></title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<link rel="icon" type="image/png" href="./favicon.png" />
+		<link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+        <script>
+            function copyTable() {
+              var table = document.getElementById("content-manager-inner");
+              var range = document.createRange();
+              range.selectNode(table);
+              var selection = window.getSelection();
+              selection.removeAllRanges();
+              selection.addRange(range);
+              document.execCommand("copy");
+              alert("paste into cell A1 in a spreadsheet and save the file as a csv (comma delimited)");
+            }
+
+            function copyToClipboard(ElementId) {
+                // Get the element that contains the text to be copied
+                var element = document.getElementById(ElementId);
+                
+                // Create a temporary textarea element to hold the text
+                var tempTextarea = document.createElement("textarea");
+                
+                // Set the value of the textarea to the text of the element
+                tempTextarea.value = element.textContent;
+                
+                // Append the textarea to the document
+                document.body.appendChild(tempTextarea);
+                
+                // Select the text in the textarea
+                tempTextarea.select();
+                
+                // Copy the selected text to the clipboard
+                document.execCommand("copy");
+                
+                // Remove the temporary textarea from the document
+                document.body.removeChild(tempTextarea);
+                
+                // Display an alert to confirm that the text was copied
+                alert("Code copied to clipboard! Go run the code in DV Dev");
+            }
+        </script>
+		<script defer src="https://pyscript.net/latest/pyscript.js"></script>
+
+		<link rel="stylesheet" href="./assets/css/examples.css" />
+	</head>
+
+	<body>
+		<nav class="navbar" style="background-color: #1879ba;">
+			<div class="app-header">
+				<a href="/">
+                    <svg width="30" height="30">
+                    <path d="M50 5a45 45 0 1 1 0.1 0z m0-10a55 55 0 1 0 0.1 0z m25 53l-8-22.7 19.2-13.9-23.8-0.7-9.4-22.1-9.4 22.1-23.8 0.7 19.2 13.9-8 22.7 17.1-11.5z" fill="#000" />
+                    </svg>
+				</a>
+				<a class="title" id="page-title" href="" style="color: #f0ab3c;"></a>
+			</div>
+		</nav>
+
+		<br />
+		<div id="page-message"></div>
+
+		<div id="pandas-source">
+			<h3>Paste Data From Excel Below</h3>
+            <p>after pasting data into the space below, click on 'Load Pasted Data' to load the data into the tool.</p>
+			<textarea id="txt-url" rows="10" cols="50"></textarea>
+            <br>
+			<button type="submit" id="btn-load" class="py-button" py-click="loadFromPasted()">Load Pasted Data</button>
+            <p>Loads the pasted data</p>
+            <br><br>
+            <button type="submit" id="btn-load" class="py-button" py-click="createAuthenticate()">Create Activate Code</button>
+            <p>Create activate code. This creates code to activate any existing users.</p>
+            <br><br>
+            <button class = "py-button"onclick="copyToClipboard('activate-code-inner')">Copy Activate Code</button>
+            <p>Copies the activate code to your clipboard. 
+                <br>
+                <b>HOW TO RUN UPDATE CODE</b>
+                <br>
+                1) Now go to DV dev.
+                <br>
+                2) Cntrl + O
+                <br>
+                3)  Logical Path = "CUST_SCRIPT:"
+                <br>
+                file name = "WHS_bulk_updates.prg"
+                <br>
+                UNCHECK "read only"
+                <br>
+                4) Paste in "insert update scripts below"
+                <br>
+                5) Click on Compile (It's a blue arrow pointing to a brick wall)
+                <br>
+                6) Click run (It is an orange bolt arrow pointing down/right)
+                <br>
+                7) Click 'Execute'
+                <br>
+                8) Close the box saying "No data fround". You have now finished running the update script.
+            </p>
+            <br><br>
+			<button type="submit" id="btn-load" class="py-button" py-click="createContentManagerFile()">Create Content Manager File</button>
+            <p>Creates Content Manager Table</p>
+            <br><br>
+            <button class = "py-button" onclick="copyTable()">Copy Content Manager Table</button>
+            <p>Copies the table to clipboard.
+                <br>
+                1) Open Excel. Cntrl + V into Cell A1
+                <br>
+                2) Save the data as a .csv file.
+                <br>
+                3) Open Content Manager, click "Convert CSV to XML", browse to find the file, change 'Domain Type' to "personell", hit finish
+                <br>
+                4) Import in audit mode, then import in update mode (File Import).
+            </p>
+            <br><br>
+			<button type="submit" id="btn-load" class="py-button" py-click="createCredentialAndLdapCode()">Create Cred and Ldap Code</button>
+            <p>Creates code relating to account syncing</p>
+            <br><br>
+            <button class = "py-button"onclick="copyToClipboard('credential-code-inner')">Copy Credential and Ldap Code</button>
+            <p>Copies the code to clipboad. Run the code in DV dev using the method. Above. Audit, then you're done</p>
+		</div>
+
+		<div id ="pandas-output" hidden>
+			<h3>Table</h3>
+			<div id="pandas-output-inner"></div>
+		</div>
+
+        <div id ="activate-code" hidden>
+			<h3>Activate Code</h3>
+            <table>
+                <tr>
+                  <td style="border: 1px solid black;"><pre id="activate-code-inner"></pre></td>
+                </tr>
+              </table>
+		</div>
+
+        <div id ="content-manager" hidden>
+			<h3>Table 2</h3>
+			<div id="content-manager-inner"></div>
+		</div>
+
+        <div id ="credential-code" hidden>
+			<h3>Credential and Ldap Code</h3>
+            <table>
+                <tr>
+                  <td style="border: 1px solid black;"><pre id="credential-code-inner"></pre></td>
+                </tr>
+              </table>
+		</div>
+	
+
+		<py-tutor>
+			<py-config>
+				packages = ["pandas", "numpy"]
+			</py-config>
+
+			<section class="pyscript">
+				<py-script>
+                    import pandas as pd
+                    from js import document
+                    import datetime
+                    import numpy as np
+                    import io
+                    
+                    title = "Bulk Upload tool"
+                    page_message = "Loads pasted excel data into a table"
+                    
+                    Element("header-title").element.innerText = title
+                    Element("page-title").element.innerText = title
+                    Element("page-message").element.innerText = page_message
+                    Element("txt-url").element.value = ""
+                    
+                    # CCL Code List
+                    ccl_code = [
+                    '; USER RE-ACTIVATION SCRIPT',
+                    'update into prsnl p',
+                    'set p.end_effective_dt_tm = cnvtdatetime("31-DEC-2100")',
+                    ', p.updt_dt_tm = cnvtdatetime(curdate,curtime3)',
+                    ', p.updt_id = reqinfo->updt_id',
+                    ', p.updt_cnt = p.updt_cnt + 1',
+                    'where p.username = "SWAPME123"',
+                    ''
+                    ]
+
+                    # CCL Code
+                    ccl_cred_code = [
+                    '; CREDENTIAL MOVE SCRIPT ------------------------------------------'
+                    , 'update into credential cred'
+                    , 'set cred.prsnl_id = (select person_id from prsnl where username = "SWAPME123")'
+                    , ', cred.credential_cd = (select code_value from code_value where code_set = 29600 and display = "SWAP_TO_REAL_CREDENTIAL")'
+                    , ', cred.credential_type_cd = 686580 ; License from code set 254874'
+                    , ', cred.beg_effective_dt_tm = cnvtdatetime(curdate,curtime3)'
+                    , ', cred.active_ind = 1'
+                    , ', cred.active_status_dt_tm = cnvtdatetime(curdate,curtime3)'
+                    , ', cred.active_status_cd = 188 ; Active from code set 48'
+                    , ', cred.updt_dt_tm = cnvtdatetime(curdate,curtime3)'
+                    , ', cred.updt_id = reqinfo->updt_id'
+                    , ', cred.updt_cnt = cred.updt_cnt + 1'
+                    , 'where cred.credential_id  = ('
+                    , 'select min(credential_id)'
+                    , 'from credential'
+                    , 'where prsnl_id = 13876656 ; Credential Box user in prod or cert'
+                    , ')'
+                    , 'and not exists ('
+                    , 'select 1'
+                    , 'from credential'
+                    , 'where prsnl_id = (select person_id from prsnl where username = "SWAPME123")'
+                    , 'and credential_cd = (select code_value from code_value where code_set = 29600 and display = "SWAP_TO_REAL_CREDENTIAL")'
+                    , 'and active_ind = 1'
+                    , ')'
+                    , ''
+                    , '; DIRECTORY IND SCRIPT'
+                    , 'update into ea_user eau'
+                    , 'set'
+                    , 'eau.directory_ind = 1'
+                    , ',eau.updt_dt_tm = cnvtdatetime(curdate,curtime3)'
+                    , ',eau.updt_id = reqinfo->updt_id'
+                    , ',eau.updt_cnt = eau.updt_cnt + 1'
+                    , 'where eau.username = "SWAPME123"'
+                    , ';---------------------------------------------------------------------'
+                    ]
+
+                    # Content Manager Variables
+                    #content_manager_template_json = '{"External Id":{},"External Id Alias Pool":{},"Username":{},"*Last Name":{},"*First Name":{},"Middle Name":{},"Name Full Formatted":{},"Title":{},"Suffix":{},"Position":{},"Begin Date+Time":{},"*End Date+Time":{},"Physician Ind":{},"SSN":{},"SSN Pool":{},"Birthdate":{},"Sex":{},"VIP":{},"Active Ind":{},"Primary Assigned Location":{},"Email":{},"*Prsnl Alias Type":{},"*Prsnl Alias":{},"*Prsnl Alias Pool":{},"Prsnl Alias Active Ind":{},"Prsnl_Alias_End_Dt":{},"*Org Name":{},"Org Confid Level":{},"Org_End_Dt":{},"*Address Type":{},"*Address Type Seq":{},"Address Street 1":{},"Address Street 2":{},"Address Street 3":{},"Address Street 4":{},"City":{},"County":{},"State or Prov":{},"Country":{},"Zip Code":{},"Contact":{},"Comment":{},"District Health UK":{},"Primary Care UK":{},"Address_Delete_Ind":{},"Org Address Reltn Ind":{},"Org Addr Name":{},"Org Addr Type":{},"Org Addr Sequence":{},"*Phone Type":{},"*Phone Type Seq":{},"Phone Number":{},"Phone Extension":{},"Phone Format":{},"Phone Description":{},"Phone Contact":{},"Phone Call Instruction":{},"Phone_Delete_Ind":{},"Org Phone Reln Ind":{},"Org Phone Name":{},"Org Phone Type":{},"Org Phone Seq":{},"*Location Type":{},"*Location Name":{},"Location_Delete_Ind":{},"*Org Group Type":{},"*Org Group Name":{},"Org_Group_Delete_Ind":{},"*Prsnl Group Type":{},"*Prsnl Group Name":{},"*Prsnl Group Class":{},"Prsnl_Group_Delete_Ind":{},"*Clinical Service Display":{},"Clinical Service Default":{},"Clinical Service Org Name":{},"Clin_Serv_Delete_Ind":{}}'
+                    header_row = ['*Last Name', '*First Name', 'Middle Name', 'Username', 'External Id', 'External Id Alias Pool', 'Name Full Formatted', 'Title', 'Suffix', 'Position', 'Begin Date+Time', '*End Date+Time', 'Physician Ind', 'SSN', 'SSN Pool', 'Birthdate', 'Sex', 'VIP', 'Active Ind', 'Primary Assigned Location', 'Email', '*Prsnl Alias Type', '*Prsnl Alias', '*Prsnl Alias Pool', 'Prsnl Alias Active Ind', 'Prsnl_Alias_End_Dt', '*Org Name', 'Org Confid Level', 'Org_End_Dt', '*Address Type', '*Address Type Seq', 'Address Street 1', 'Address Street 2', 'Address Street 3', 'Address Street 4', 'City', 'County', 'State or Prov', 'Country', 'Zip Code', 'Contact', 'Comment', 'District Health UK', 'Primary Care UK', 'Address_Delete_Ind', 'Org Address Reltn Ind', 'Org Addr Name', 'Org Addr Type', 'Org Addr Sequence', '*Phone Type', '*Phone Type Seq', 'Phone Number', 'Phone Extension', 'Phone Format', 'Phone Description', 'Phone Contact', 'Phone Call Instruction', 'Phone_Delete_Ind', 'Org Phone Reln Ind', 'Org Phone Name', 'Org Phone Type', 'Org Phone Seq', '*Location Type', '*Location Name', 'Location_Delete_Ind', '*Org Group Type', '*Org Group Name', 'Org_Group_Delete_Ind', '*Prsnl Group Type', '*Prsnl Group Name', '*Prsnl Group Class', 'Prsnl_Group_Delete_Ind', '*Clinical Service Display', 'Clinical Service Default', 'Clinical Service Org Name', 'Clin_Serv_Delete_Ind']
+                    
+                    end_date = r"30/12/2100"
+                    alias_pool = 'External ID'
+                    today = datetime.date.today()
+                    d1 = today.strftime("%d/%m/%Y")
+                    begin_date = d1 + ' 00:00'
+                    end_date = '31/12/2100 00:00'
+                    act_ind = '1'
+                    org_g_type = 'SECURITY'
+                    org_g_name = 'Western Health'
+                    
+                    df_cm = pd.DataFrame(data=[header_row], columns=header_row)
+
+                    
+                    final_activate_code_string = str('')
+                    
+                    df = pd.DataFrame()
+                    def loadFromPasted(*ags, **kws):
+                        global df
+                        global final_activate_code_string
+                        global final_credential_code_string
+                        # clear dataframe & output
+                        df = pd.DataFrame()
+                        final_activate_code_string = str('')
+                        final_credential_code_string = str('')
+                        Element("pandas-output-inner").element.innerHTML = ""
+                        
+                        # Pasted Excel option
+                        data = js.document.getElementById("txt-url").value
+                        df = pd.read_csv(io.StringIO(data), sep='\t', header=0)
+                        #Display
+                        Element("pandas-output").element.style.display = "block"
+                        display (df, target="pandas-output-inner", append="False")
+
+                        #Loop below to create activate code
+                        for index, row in df.iterrows():
+                            # Column that has the usernames to put in the code
+                            to_switch = row['USERNAME'].upper()
+                            #Write to file
+                            for a_row in ccl_code:
+                                # REPLACE SWAPME123 with the username in each row of the code slab
+                                new_row = a_row.replace('SWAPME123', to_switch)
+                                final_activate_code_string = final_activate_code_string + new_row + '\n'
+
+                        #Loop below to create Credential and Ldap code
+                        for index, row in df.iterrows():
+                                # Column that has the usernames to put in the code
+                                to_switch_1 = str(row['USERNAME'].upper())
+                                to_switch_2 = str(row['CREDENTIAL'])
+                                #Write to file
+                                for a_row in ccl_cred_code:
+                                    # REPLACE SWAPME123 with the username in each row of the code slab
+                                    new_row = a_row.replace('SWAPME123', to_switch_1)
+                                    new_row_2 = new_row.replace('SWAP_TO_REAL_CREDENTIAL', to_switch_2)
+                                    final_credential_code_string = final_credential_code_string + new_row_2 + '\n'
+                    
+                        #Content Manager Dataframe
+                        row_number = 1
+                        for index, row in df.iterrows():
+                            # Column that has the usernames to put in the code
+                            a_user = row['USERNAME'].upper()
+                            a_credential = str(row['CREDENTIAL'])
+                            # Set credential to blank rather than 'nan' if it's not filled out
+                            if a_credential == 'nan':
+                                a_credential = ''
+                            a_fname = row['FIRST']
+                            a_lname = row['LAST']
+                            a_fullname = a_lname + ', ' + a_fname + ' - ' + a_credential
+                            a_position = row['POSITION']
+                            a_extid = 'WHS' + a_user
+                            physician_ind = '0'
+                            if a_position == 'Medical Officer':
+                                physician_ind = '1'
+                            if a_position == 'Medical Officer P1':
+                                physician_ind = '1'
+                            # Edit Sheet
+                            df_cm.loc[row_number,'Username'] = a_user
+                            df_cm.loc[row_number,'External Id'] = a_extid
+                            df_cm.loc[row_number,'External Id Alias Pool'] = alias_pool
+                            df_cm.loc[row_number,'*Last Name'] = a_lname
+                            df_cm.loc[row_number,'*First Name'] = a_fname
+                            df_cm.loc[row_number,'Name Full Formatted'] = a_fullname
+                            df_cm.loc[row_number,'Position'] = a_position
+                            df_cm.loc[row_number,'Begin Date+Time'] = begin_date
+                            df_cm.loc[row_number,'*End Date+Time'] = end_date
+                            df_cm.loc[row_number,'Physician Ind'] = physician_ind
+                            df_cm.loc[row_number,'Active Ind'] = act_ind
+                            df_cm.loc[row_number,'*Org Group Type'] = org_g_type
+                            df_cm.loc[row_number,'*Org Group Name'] = org_g_name
+                            row_number+=1
+                        js.alert('Data Loaded! Now hit the "Create credential code" button')
+                        
+                    def createAuthenticate(*ags, **kws):
+                        Element("activate-code").element.style.display = "block"
+                        display (final_activate_code_string, target="activate-code-inner", append="False")
+                        js.alert('Authenticate code created (scroll down to see it), copy the code then run it')
+                    
+                    def createContentManagerFile(*ags, **kws):
+                        df_cm2 = pd.DataFrame(columns=header_row)
+                        Element("content-manager").element.style.display = "block"
+                        html_table = df_cm.to_html(index=False)
+                        html_table = html_table.replace('NaN', '')
+                        display(HTML(html_table), target="content-manager-inner", append=False)
+                        js.alert('Data Created, now copy the table with the "Copy content manager table" button, paste into excel, store as a csv, upload using content manager')
+
+                    def createCredentialAndLdapCode(*ags, **kws):
+                        Element("credential-code").element.style.display = "block"
+                        display (final_credential_code_string, target="credential-code-inner", append="False")
+                        js.alert('Cred/Ldap code created, copy the code, then run the code, then check your work"')
+				</py-script>
+			</section>
+		</py-tutor>
+	</body>
+</html>
