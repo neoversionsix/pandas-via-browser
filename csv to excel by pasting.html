@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title id="header-title"></title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<link rel="icon" type="image/png" href="./favicon.png" />
+		<link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+		<script defer src="https://pyscript.net/latest/pyscript.js"></script>
+
+		<link rel="stylesheet" href="./assets/css/examples.css" />
+	</head>
+
+	<body>
+		<nav class="navbar" style="background-color: #1879ba;">
+			<div class="app-header">
+				<a href="/">
+					<img src="./logo.png" class="logo" width="100" height="100">
+				</a>
+				<a class="title" id="page-title" href="" style="color: #f0ab3c;"></a>
+			</div>
+		</nav>
+
+		<br />
+		<div id="page-message"></div>
+
+		<div id="pandas-source">
+			<h3>Paste Data From Excel Below</h3>
+			<textarea id="txt-url" rows="10" cols="50"></textarea>
+			<br>
+			<button type="submit" id="btn-load" class="py-button" py-click="loadFromURL()">Load Pasted Data</button>
+		</div>
+
+
+
+		</div>
+
+		<div id ="pandas-output" hidden>
+			<h3>Output</h3>
+			<div id="pandas-output-inner"></div>
+		</div>
+
+		<py-tutor>
+			<py-config>
+				packages = ["pandas"]
+			</py-config>
+
+			<section class="pyscript">
+				<py-script>
+					import pandas as pd
+					#from pyodide.http import open_url
+					import sys
+					import io
+
+					title = "Transforming Excel Data with Python in the Browser"
+					page_message = "Loads pasted excel data into a table"
+
+					#url = "https://raw.githubusercontent.com/datasets/airport-codes/master/data/airport-codes.csv"
+
+					Element("header-title").element.innerText = title
+					Element("page-title").element.innerText = title
+					Element("page-message").element.innerText = page_message
+
+					Element("txt-url").element.value = ""
+					df = pd.DataFrame()
+					def loadFromURL(*ags, **kws):
+						global df
+						# clear dataframe & output
+						df = pd.DataFrame()
+						Element("pandas-output-inner").element.innerHTML = ""
+						url = Element("txt-url").element.value
+						# Pasted Excel option
+						data = js.document.getElementById("txt-url").value
+						df = pd.read_csv(io.StringIO(data), sep=',', header=0)
+						Element("pandas-output").element.style.display = "block"
+						display (df, target="pandas-output-inner", append="False")
+					
+									def download_csv():
+					df.to_csv('output.csv', index=False)
+					download_link = document.createElement('a')
+					download_link.href = 'output.csv'
+					download_link.download = 'output.csv'
+					download_link.innerHTML = 'Download CSV'
+					document.getElementById('output').appendChild(download_link)
+				</py-script>
+			</section>
+		</py-tutor>
+	</body>
+</html>

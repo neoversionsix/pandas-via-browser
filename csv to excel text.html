@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title id="header-title"></title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1" />
+		<link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+		<script defer src="https://pyscript.net/latest/pyscript.js"></script>
+	</head>
+	<body>
+		<br />
+		<input type="file" id="file-input">
+		<br />
+		<button onclick="export_to_xlsx()">Export to XLSX</button>
+
+		<py-tutor>
+			<py-config>
+				packages = ["pandas"]
+			</py-config>
+
+			<section class="pyscript">
+				<py-script>
+					import pandas as pd
+					from js import document, alert
+
+					def export_to_xlsx():
+					    file_input = document.getElementById("file-input")
+					    filename = file_input.files[0].name
+					    chunk_size = 1000000 # 1 million rows per chunk
+					    reader = pd.read_csv(filename, chunksize=chunk_size)
+					    writer = pd.ExcelWriter('output.xlsx')
+					    for i, chunk in enumerate(reader):
+					        chunk.to_excel(writer, sheet_name=f'Sheet{i+1}', index=False)
+					    writer.save()
+					    alert('File exported successfully!')
+				</py-script>
+			</section>
+		</py-tutor>
+	</body>
+</html>
