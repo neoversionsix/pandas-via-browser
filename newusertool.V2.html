@@ -45,10 +45,15 @@
             }
         </script>
 		<script defer src="https://pyscript.net/latest/pyscript.js"></script>
-
+        <style>
+            table, th, td {
+            border: 1px solid black;
+            border-collapse: collapse;
+            padding: 5px;
+            }
+</style>
 		<link rel="stylesheet" href="./assets/css/examples.css" />
 	</head>
-
 	<body>
 		<nav class="navbar" style="background-color: #1879ba;">
 			<div class="app-header">
@@ -66,7 +71,42 @@
 
 		<div id="pandas-source">
 			<h3>Paste Data From Excel Below</h3>
-            <p>after pasting data into the space below, click on 'Load Pasted Data' to load the data into the tool.</p>
+            <p>after pasting data into the space below, click on 'Load Pasted Data' to load the data into the tool. The input data should Look like this</p>
+            <table>
+            <thead>
+                <tr>
+                <th>CREDENTIAL</th>
+                <th>USERNAME</th>
+                <th>FIRST</th>
+                <th>LAST</th>
+                <th>POSITION</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <td>RN</td>
+                <td>ABC123</td>
+                <td>Bob</td>
+                <td>Green</td>
+                <td>Nursing P1</td>
+                </tr>
+                <tr>
+                <td>RN</td>
+                <td>ABC124</td>
+                <td>Tom</td>
+                <td>Black</td>
+                <td>Nursing P1</td>
+                </tr>
+                <tr>
+                <td>RN</td>
+                <td>ABC125</td>
+                <td>John</td>
+                <td>Cash</td>
+                <td>Nursing P1</td>
+                </tr>
+            </tbody>
+            </table>
+            <br><br>
 			<textarea id="txt-url" rows="10" cols="50"></textarea>
             <br>
 			<button type="submit" id="btn-load" class="py-button" py-click="loadFromPasted()">Load Pasted Data</button>
