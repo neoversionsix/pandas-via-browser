@@ -312,15 +312,17 @@
 
                         #Loop below to create Credential and Ldap code
                         for index, row in df.iterrows():
-                                # Column that has the usernames to put in the code
-                                to_switch_1 = str(row['USERNAME'].upper())
-                                to_switch_2 = str(row['CREDENTIAL'])
-                                #Write to file
-                                for a_row in ccl_cred_code:
-                                    # REPLACE SWAPME123 with the username in each row of the code slab
-                                    new_row = a_row.replace('SWAPME123', to_switch_1)
-                                    new_row_2 = new_row.replace('SWAP_TO_REAL_CREDENTIAL', to_switch_2)
-                                    final_credential_code_string = final_credential_code_string + new_row_2 + '\n'
+                                # Only do stuff if the Credential is not blank
+                                if  str(row['CREDENTIAL']) != 'nan':
+                                    # Column that has the usernames to put in the code
+                                    to_switch_1 = str(row['USERNAME'].upper())
+                                    to_switch_2 = str(row['CREDENTIAL'])
+                                    #Write to file
+                                    for a_row in ccl_cred_code:
+                                        # REPLACE SWAPME123 with the username in each row of the code slab
+                                        new_row = a_row.replace('SWAPME123', to_switch_1)
+                                        new_row_2 = new_row.replace('SWAP_TO_REAL_CREDENTIAL', to_switch_2)
+                                        final_credential_code_string = final_credential_code_string + new_row_2 + '\n'
                     
                         #Content Manager Dataframe
                         row_number = 1
@@ -363,7 +365,7 @@
                     def createAuthenticate(*ags, **kws):
                         Element("activate-code").element.style.display = "block"
                         display (final_activate_code_string, target="activate-code-inner", append="False")
-                        js.alert('Activate code created, copy the code then run it')
+                        js.alert('Now hit the "Copy Activate Code" button')
                     
                     def createContentManagerFile(*ags, **kws):
                         df_cm2 = pd.DataFrame(columns=header_row)
@@ -376,7 +378,7 @@
                     def createCredentialAndLdapCode(*ags, **kws):
                         Element("credential-code").element.style.display = "block"
                         display (final_credential_code_string, target="credential-code-inner", append="False")
-                        js.alert('Cred/Ldap code created, copy the code, then run the code, then check your work"')
+                        js.alert('Hit "Copy Credential and LDAP Code"')
 				</py-script>
 			</section>
 		</py-tutor>
