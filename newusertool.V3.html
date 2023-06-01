@@ -58,9 +58,12 @@
 		<nav class="navbar" style="background-color: #1879ba;">
 			<div class="app-header">
 				<a href="/">
-                    <svg width="30" height="30">
-                    <path d="M50 5a45 45 0 1 1 0.1 0z m0-10a55 55 0 1 0 0.1 0z m25 53l-8-22.7 19.2-13.9-23.8-0.7-9.4-22.1-9.4 22.1-23.8 0.7 19.2 13.9-8 22.7 17.1-11.5z" fill="#000" />
-                    </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="50" height="25">
+                        <!-- Base of the switch -->
+                        <rect x="0" y="5" width="50" height="15" rx="7.5" fill="#aaa"/>
+                        <!-- Toggle button, adjust the x attribute to move it to the other side -->
+                        <rect x="0" y="0" width="25" height="25" rx="12.5" fill="#000"/>
+                    </svg>  
 				</a>
 				<a class="title" id="page-title" href="" style="color: #f0ab3c;"></a>
 			</div>
@@ -106,16 +109,13 @@
                 </tr>
             </tbody>
             </table>
-            <br><br>
+            <br>
+            <p>Paste Data Here (the box below)</p>
 			<textarea id="txt-url" rows="10" cols="50"></textarea>
             <br>
-			<button type="submit" id="btn-load" class="py-button" py-click="loadFromPasted()">Load Pasted Data</button>
+			<button type="submit" id="btn-load" class="py-button" py-click="loadFromPasted()">Load Data and Copy Activate Code to Clipboard</button>
             <p>Loads the pasted data</p>
-            <br><br>
-            <button type="submit" id="btn-load" class="py-button" py-click="createAuthenticate()">Create Activate Code</button>
             <p>Create activate code. This creates code to activate any existing users.</p>
-            <br><br>
-            <button class = "py-button"onclick="copyToClipboard('activate-code-inner')">Copy Activate Code</button>
             <p>Copies the activate code to your clipboard. 
                 <br>
                 <b>HOW TO RUN UPDATE CODE</b>
@@ -140,11 +140,8 @@
                 <br>
                 8) Close the box saying "No data fround". You have now finished running the update script.
             </p>
-            <br><br>
-			<button type="submit" id="btn-load" class="py-button" py-click="createContentManagerFile()">Create Content Manager File</button>
+			<button type="submit" id="btn-load" class="py-button" py-click="createContentManagerFile()">Create Content Manager File and Copy to Clipboard</button>
             <p>Creates Content Manager Table</p>
-            <br><br>
-            <button class = "py-button" onclick="copyTable()">Copy Content Manager Table</button>
             <p>Copies the table to clipboard.
                 <br>
                 1) Open Excel. Cntrl + V into Cell A1
@@ -155,11 +152,8 @@
                 <br>
                 4) Import in audit mode, then import in update mode (File Import).
             </p>
-            <br><br>
-			<button type="submit" id="btn-load" class="py-button" py-click="createCredentialAndLdapCode()">Create Cred and Ldap Code</button>
-            <p>Creates code relating to account syncing</p>
-            <br><br>
-            <button class = "py-button"onclick="copyToClipboard('credential-code-inner')">Copy Credential and Ldap Code</button>
+			<button type="submit" id="btn-load" class="py-button" py-click="createCredentialAndLdapCode()">Create Cred and Ldap Code and Copy to Clipboard</button>
+            <p>Creates code relating to account syncing and credential allocation</p>
             <p>Copies the code to clipboad. Run the code in DV dev using the method. Above. Audit, then you're done</p>
 		</div>
 
@@ -204,6 +198,7 @@
                     import datetime
                     import numpy as np
                     import io
+                    from js import eval
                     
                     title = "Bulk Upload tool"
                     page_message = "Loads pasted excel data into a table"
@@ -360,12 +355,9 @@
                             df_cm.loc[row_number,'*Org Group Type'] = org_g_type
                             df_cm.loc[row_number,'*Org Group Name'] = org_g_name
                             row_number+=1
-                        js.alert('Data Loaded! Now hit the "Create Activate Code" button')
-                        
-                    def createAuthenticate(*ags, **kws):
                         Element("activate-code").element.style.display = "block"
                         display (final_activate_code_string, target="activate-code-inner", append="False")
-                        js.alert('Now hit the "Copy Activate Code" button')
+                        eval("copyToClipboard('activate-code-inner')")
                     
                     def createContentManagerFile(*ags, **kws):
                         df_cm2 = pd.DataFrame(columns=header_row)
@@ -373,12 +365,12 @@
                         html_table = df_cm.to_html(index=False)
                         html_table = html_table.replace('NaN', '')
                         display(HTML(html_table), target="content-manager-inner", append=False)
-                        js.alert('Data Created, now copy the table with the "Copy content manager table" button, paste into excel, store as a csv, upload using content manager')
+                        eval("copyTable()")
 
                     def createCredentialAndLdapCode(*ags, **kws):
                         Element("credential-code").element.style.display = "block"
                         display (final_credential_code_string, target="credential-code-inner", append="False")
-                        js.alert('Hit "Copy Credential and LDAP Code"')
+                        eval("copyToClipboard('credential-code-inner')")
 				</py-script>
 			</section>
 		</py-tutor>
